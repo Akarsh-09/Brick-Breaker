@@ -1,6 +1,6 @@
-# Tile Breaker
+# Brick Breaker
 ## Description
-A Java Swing based project for Tile Breaker
+A Java Swing based project for Brick Breaker
 
 ## How-to-play Instructions:
 To run the programme, following instructions should be followed:
