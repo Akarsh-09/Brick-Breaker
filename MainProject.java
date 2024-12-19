@@ -13,8 +13,9 @@ public class MainProject {
     int columns = 10;
     JLabel Score;
     JButton Restart;
-    int XVel = -1;
-    int YVel = 1;
+    JButton Start;
+    int XVel = 0;
+    int YVel = 0;
     int delay = 3; // 5
     int score = 0;
     int change = 0;
@@ -26,6 +27,7 @@ public class MainProject {
     JPanel LastLine;
     Point PrevCoord;
     static Point InitialClick;
+    Border border = BorderFactory.createLineBorder(Color.BLACK, 0);
 
     public int Break(int BallX, int BallY, ArrayList<JPanel> wall)
     {
@@ -101,11 +103,27 @@ public class MainProject {
                 frame.remove(wall.get(index));
                 wall.remove(index);
                 score++;
-                if(score == 4)
-                    delay = delay - 2;
                 Score.setText("Score: " + score);
                 frame.revalidate();
                 frame.repaint();
+
+                if(score == 12)
+                {
+                    int bx = ball.getX();
+                    int by = ball.getY();
+                    int sx = Slider.getX();
+                    int sy = Slider.getY();
+                    JOptionPane.showMessageDialog(frame, "You Won", "Game Ended", JOptionPane.INFORMATION_MESSAGE);
+                    ball.setBounds(bx, by, 10, 10);
+                    Slider.setBounds(sx, sy, 38, 7); // 350, 600, 38, 7
+                    XVel = 0;
+                    YVel = 0;
+
+                    frame.remove(BG);
+                    frame.add(BG);
+                    frame.revalidate();
+                    frame.repaint();
+                }
             }
 
             ball.setLocation(BallX + XVel, BallY + YVel - change);
@@ -119,7 +137,7 @@ public class MainProject {
         frame.setResizable(false);
         frame.setSize(738, 800);
 
-        Border border = BorderFactory.createLineBorder(Color.BLACK, 0);
+        
 
         Score = new JLabel("Score: 0");
         Font font1 = new Font("Serif", Font.BOLD, 23);
@@ -129,8 +147,13 @@ public class MainProject {
         Score.setForeground(Color.white);
         frame.add(Score);
 
-        Restart = new JButton("Restart");
+        Start = new JButton("Start");
         Font font2 = new Font("Serif", Font.BOLD, 15);
+        Start.setBounds(600, 725, 85, 35);
+        Start.setFont(font2);
+        frame.add(Start);
+
+        Restart = new JButton("Restart");
         Restart.setBounds(600, 725, 85, 35);
         Restart.setFont(font2);
         frame.add(Restart);
@@ -147,7 +170,7 @@ public class MainProject {
         }
 
         Slider = new JPanel();
-        Slider.setBounds(350, 695, 38, 7); // 350, 600, 38, 7
+        Slider.setBounds(420, 625, 38, 7); // 350, 600, 38, 7
         Slider.setBackground(Color.black);
         frame.add(Slider);
 
@@ -155,6 +178,17 @@ public class MainProject {
         ball.setBounds(720, 330, 10, 10); // 720, 330, 10, 10
         ball.setBackground(Color.red);
         frame.add(ball);
+
+        Start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == Start) {
+                    XVel = -1;
+                    YVel = 1;
+                    frame.remove(Start);
+                }
+            }
+        });
 
         Restart.addActionListener(new ActionListener() {
             @Override
@@ -166,7 +200,7 @@ public class MainProject {
                     wall.clear();
                     score = 0;
                     ball.setBounds(720, 330, 10, 10);
-                    Slider.setBounds(350, 695, 38, 7); // 350, 600, 38, 7
+                    Slider.setBounds(420, 625, 38, 7); // 350, 600, 38, 7
                     XVel = -1;
                     YVel = 1;
 
@@ -193,7 +227,7 @@ public class MainProject {
 
         ControlPanel = new JPanel();
         ControlPanel.setBounds(0, 600, 738, 107);
-        ControlPanel.setBackground(Color.gray);
+        ControlPanel.setBackground(Color.darkGray);
         frame.add(ControlPanel);
 
         LastLine = new JPanel();
