@@ -15,15 +15,19 @@ public class MainProject {
     JButton Restart;
     int XVel = -1;
     int YVel = 1;
-    int delay = 4; // 5
+    int delay = 3; // 5
     int score = 0;
+    int change = 0;
+    int bool = 0;
     static JPanel Slider;
     JPanel ball;
     JPanel ControlPanel;
+    JPanel BG;
+    JPanel LastLine;
     Point PrevCoord;
     static Point InitialClick;
 
-    public int Collide(int BallX, int BallY, ArrayList<JPanel> wall)
+    public int Break(int BallX, int BallY, ArrayList<JPanel> wall)
     {
         for(int i = 0; i < rows * columns - score; i++)
         {
@@ -64,9 +68,16 @@ public class MainProject {
             int BallY = ball.getY();
             int SliderX = Slider.getX();
             int SliderY = Slider.getY();
+            change = 0;
 
-            if(BallX > SliderX - 10 && BallX < SliderX + 38 && BallY < SliderY && BallY > SliderY - 10)
+            if(BallX > SliderX - 10 && BallX < SliderX + 38 && BallY < SliderY && BallY > SliderY - 10 && (bool == 0))
+            {
                 YVel = -1 * YVel;
+                bool = 1;
+                change = BallY + YVel - SliderY + 13;
+            }
+            else if(!(BallX > SliderX - 10 && BallX < SliderX + 38 && BallY < SliderY && BallY > SliderY - 10))
+                bool = 0;
 
             if(BallX < 0 || BallX > 728)
                 XVel = -1 * XVel;
@@ -74,31 +85,31 @@ public class MainProject {
             if(BallY < 0)
                 YVel = -1 * YVel;
 
-            if(BallY > 770)
+            if(BallY > 697)
             {
                 XVel = 0;
                 YVel = 0;
                 BallX = 720;
                 BallY = 330;
                 ball.setLocation(720, 330);
-                System.out.println(ball.getX() + "  " + ball.getY());
                 JOptionPane.showMessageDialog(frame, "You Lost", "", JOptionPane.ERROR_MESSAGE);
             }
             
-            int index = Collide(BallX, BallY, wall);
+            int index = Break(BallX, BallY, wall);
             if(index != -1)
             {
                 frame.remove(wall.get(index));
                 wall.remove(index);
                 score++;
+                if(score == 4)
+                    delay = delay - 2;
                 Score.setText("Score: " + score);
                 frame.revalidate();
                 frame.repaint();
             }
 
-            ball.setLocation(BallX + XVel, BallY + YVel);
+            ball.setLocation(BallX + XVel, BallY + YVel - change);
         });
-
         timer.start();
     }
 
@@ -112,13 +123,15 @@ public class MainProject {
 
         Score = new JLabel("Score: 0");
         Font font1 = new Font("Serif", Font.BOLD, 23);
+        // font1.
         Score.setBounds(40, 718, 100, 40);
         Score.setFont(font1);
+        Score.setForeground(Color.white);
         frame.add(Score);
 
         Restart = new JButton("Restart");
         Font font2 = new Font("Serif", Font.BOLD, 15);
-        Restart.setBounds(600, 715, 85, 35);
+        Restart.setBounds(600, 725, 85, 35);
         Restart.setFont(font2);
         frame.add(Restart);
 
@@ -134,7 +147,7 @@ public class MainProject {
         }
 
         Slider = new JPanel();
-        Slider.setBounds(350, 600, 38, 7);
+        Slider.setBounds(350, 695, 38, 7); // 350, 600, 38, 7
         Slider.setBackground(Color.black);
         frame.add(Slider);
 
@@ -153,7 +166,7 @@ public class MainProject {
                     wall.clear();
                     score = 0;
                     ball.setBounds(720, 330, 10, 10);
-                    Slider.setBounds(350, 600, 38, 7);
+                    Slider.setBounds(350, 695, 38, 7); // 350, 600, 38, 7
                     XVel = -1;
                     YVel = 1;
 
@@ -161,7 +174,7 @@ public class MainProject {
                         for (int j = 0; j < rows; j++) {
                             JPanel brick = new JPanel();
                             brick.setBounds(70 * j + 20, 30 * i + 20, 68, 28);
-                            brick.setBackground(new Color(255 - 10*i, 55 + 10*i + 10*j, 200 - 10*j));
+                            brick.setBackground(new Color(50 - 2*j, 48 + 23*j, 174 + 9*i));
                             brick.setBorder(border);
                             wall.add(brick);
                             frame.add(brick);
@@ -169,6 +182,9 @@ public class MainProject {
                     }
 
                     Score.setText("Score: 0");
+
+                    frame.remove(BG);
+                    frame.add(BG);
                     frame.revalidate();
                     frame.repaint();
                 }
@@ -177,9 +193,20 @@ public class MainProject {
 
         ControlPanel = new JPanel();
         ControlPanel.setBounds(0, 600, 738, 107);
-        ControlPanel.setBackground(Color.lightGray);
+        ControlPanel.setBackground(Color.gray);
         frame.add(ControlPanel);
 
+        LastLine = new JPanel();
+        LastLine.setBounds(0, 707, 738, 6);
+        LastLine.setBackground(Color.red);
+        frame.add(LastLine);
+
+        BG = new JPanel();
+        BG.setBounds(0, 0, 738, 800);
+        BG.setBackground(Color.BLACK);
+        frame.add(BG);
+
+        frame.setBackground(Color.black);
         frame.setLayout(null);
         frame.setVisible(true);
     }
