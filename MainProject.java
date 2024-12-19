@@ -107,7 +107,7 @@ public class MainProject {
                 frame.revalidate();
                 frame.repaint();
 
-                if(score == 12)
+                if(score == 100)
                 {
                     int bx = ball.getX();
                     int by = ball.getY();
