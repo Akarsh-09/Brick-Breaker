@@ -1,7 +1,9 @@
 # Brick Breaker
 ## Description
-• Developed an interactive Brick Breaker game with **real-time physics** using Java Swing.
+• Developed an interactive Brick Breaker game with **real-time physics** using Java Swing,
+
 • Integrated **event-driven controls** and **collision detection**, ensuring smooth gameplay.
+
 • Optimized using **timer** and **dynamic brick-breaking system** with **restart** and **win/loss** conditions.
 
 ## How-to-play Instructions:
