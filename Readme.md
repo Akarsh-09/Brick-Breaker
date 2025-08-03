@@ -1,6 +1,8 @@
 # Brick Breaker
 ## Description
-A Java Swing based project for Brick Breaker
+• Developed an interactive Brick Breaker game with **real-time physics** using Java Swing.
+• Integrated **event-driven controls** and **collision detection**, ensuring smooth gameplay.
+• Optimized using **timer** and **dynamic brick-breaking system** with **restart** and **win/loss** conditions.
 
 ## How-to-play Instructions:
 To run the programme, following instructions should be followed:
@@ -12,4 +14,4 @@ To run the programme, following instructions should be followed:
 
 4. Open and run the **MainProject.java** file.
 
-5. A new window will open, and you're ready to enjoy the game!
+5. A new window will open, and the game is ready to be enjoyed!

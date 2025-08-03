@@ -16,7 +16,14 @@ public class MainProject {
     JButton Start;
     int XVel = 0;
     int YVel = 0;
-    int delay = 3; // 5
+    int velocity = 4;
+    int brickWidth = 68;
+    int brickHeight = 28;
+    int ballWidth = 10;
+    int ballHeight = 10;
+    int sliderWidth = 45;
+    int sliderHeight = 10;
+    int delay = 10;
     int score = 0;
     int change = 0;
     int bool = 0;
@@ -35,29 +42,26 @@ public class MainProject {
         {
             int WallX = wall.get(i).getX();
             int WallY = wall.get(i).getY();
+            int error = 3;
+            // System.out.println("Reverse");
 
-            int point = 0;
-
-            if(BallX >= WallX + 68 + (point++) || WallX >= BallX + 9 + (point++) || BallY >= WallY + 26 + (point++) || WallY >= BallY + 7 + (point++));
-            else
+            if(!(BallX > WallX + brickWidth || WallX > BallX + ballWidth || BallY > WallY + brickHeight || WallY > BallY + ballHeight))
             {
                 if(YVel < 0)
                 {
-                    if(BallX < WallX + 29)
-                        XVel = -1 * XVel;
+                    if(BallY >= WallY + brickHeight - error)
+                        YVel = -YVel;
                     else
-                        YVel = -1 * YVel;
-                    return i;
+                        XVel = -XVel;
                 }
-
                 else
                 {
-                    if(BallX + 11 > WallX)
-                        XVel = -1 * XVel;
+                    if(BallY + ballHeight <= WallY + error)
+                        YVel = -YVel;
                     else
-                        YVel = -1 * YVel;
-                    return i;
+                        XVel = -XVel;
                 }
+                return i;
             }
         }
         return -1;
@@ -71,30 +75,31 @@ public class MainProject {
             int SliderX = Slider.getX();
             int SliderY = Slider.getY();
             change = 0;
+            int error = 3;
 
-            if(BallX > SliderX - 10 && BallX < SliderX + 38 && BallY < SliderY && BallY > SliderY - 10 && (bool == 0))
+            if(BallX > SliderX - ballWidth && BallX < SliderX + sliderWidth && BallY > SliderY - ballHeight && (bool == 0))
             {
-                YVel = -1 * YVel;
+                YVel = -YVel;
                 bool = 1;
-                change = BallY + YVel - SliderY + 13;
+                change = BallY - SliderY + error + ballHeight + YVel;
             }
-            else if(!(BallX > SliderX - 10 && BallX < SliderX + 38 && BallY < SliderY && BallY > SliderY - 10))
+            else if(!(BallX > SliderX - ballWidth && BallX < SliderX + sliderWidth && BallY > SliderY - ballHeight))
                 bool = 0;
 
-            if(BallX < 0 || BallX > 728)
-                XVel = -1 * XVel;
+            if(BallX <= 0 || BallX >= 728)
+                XVel = -XVel;
 
-            if(BallY < 0)
-                YVel = -1 * YVel;
+            if(BallY <= 0)
+                YVel = -YVel;
 
-            if(BallY > 697)
+            if(BallY > 700 - error)
             {
                 XVel = 0;
                 YVel = 0;
-                BallX = 720;
-                BallY = 330;
-                ball.setLocation(720, 330);
-                JOptionPane.showMessageDialog(frame, "You Lost", "", JOptionPane.ERROR_MESSAGE);
+                BallX = 730 - ballWidth;
+                BallY = 340 - ballHeight;
+                ball.setLocation(730 - ballWidth, 340 - ballHeight);
+                JOptionPane.showMessageDialog(frame, "You Lost", "Game Ended", JOptionPane.ERROR_MESSAGE);
             }
             
             int index = Break(BallX, BallY, wall);
@@ -113,9 +118,9 @@ public class MainProject {
                     int by = ball.getY();
                     int sx = Slider.getX();
                     int sy = Slider.getY();
-                    JOptionPane.showMessageDialog(frame, "You Won", "Game Ended", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "You Won!", "Game Completed", JOptionPane.INFORMATION_MESSAGE);
                     ball.setBounds(bx, by, 10, 10);
-                    Slider.setBounds(sx, sy, 38, 7); // 350, 600, 38, 7
+                    Slider.setBounds(sx, sy, sliderWidth, sliderHeight); // 350, 600, 45, 7
                     XVel = 0;
                     YVel = 0;
 
@@ -125,19 +130,17 @@ public class MainProject {
                     frame.repaint();
                 }
             }
-
             ball.setLocation(BallX + XVel, BallY + YVel - change);
         });
         timer.start();
     }
 
-    public MainProject() {
+    public MainProject()
+    {
         frame = new JFrame("Breaker");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setSize(738, 800);
-
-        
 
         Score = new JLabel("Score: 0");
         Font font1 = new Font("Serif", Font.BOLD, 23);
@@ -161,7 +164,7 @@ public class MainProject {
         for (int i = 0; i < columns; i++) {
             for (int j = 0; j < rows; j++) {
                 JPanel brick = new JPanel();
-                brick.setBounds(70 * j + 20, 30 * i + 20, 68, 28);
+                brick.setBounds(70 * j + 20, 30 * i + 20, brickWidth, brickHeight);
                 brick.setBackground(new Color(50 - 2*j, 48 + 23*j, 174 + 9*i)); // 255 - 10*i, 55 + 10*i + 10*j, 200 - 10*j
                 brick.setBorder(border);
                 wall.add(brick);
@@ -170,12 +173,12 @@ public class MainProject {
         }
 
         Slider = new JPanel();
-        Slider.setBounds(420, 625, 38, 7); // 350, 600, 38, 7
+        Slider.setBounds(350, 690, sliderWidth, sliderHeight); // 350, 690, 45, 7
         Slider.setBackground(Color.black);
         frame.add(Slider);
 
         ball = new JPanel();
-        ball.setBounds(720, 330, 10, 10); // 720, 330, 10, 10
+        ball.setBounds(730 - ballWidth, 340 - ballHeight, ballWidth, ballHeight); // 720, 330, 10, 10
         ball.setBackground(Color.red);
         frame.add(ball);
 
@@ -183,8 +186,8 @@ public class MainProject {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == Start) {
-                    XVel = -1;
-                    YVel = 1;
+                    XVel = -velocity;
+                    YVel = velocity;
                     frame.remove(Start);
                 }
             }
@@ -199,15 +202,15 @@ public class MainProject {
                         frame.remove(p);
                     wall.clear();
                     score = 0;
-                    ball.setBounds(720, 330, 10, 10);
-                    Slider.setBounds(420, 625, 38, 7); // 350, 600, 38, 7
-                    XVel = -1;
-                    YVel = 1;
+                    ball.setBounds(720, 330, ballWidth, ballHeight);
+                    Slider.setBounds(350, 690, sliderWidth, sliderHeight); // 350, 690, 38, 7
+                    XVel = -velocity;
+                    YVel = velocity;
 
                     for (int i = 0; i < columns; i++) {
                         for (int j = 0; j < rows; j++) {
                             JPanel brick = new JPanel();
-                            brick.setBounds(70 * j + 20, 30 * i + 20, 68, 28);
+                            brick.setBounds(70 * j + 20, 30 * i + 20, brickWidth, brickHeight);
                             brick.setBackground(new Color(50 - 2*j, 48 + 23*j, 174 + 9*i));
                             brick.setBorder(border);
                             wall.add(brick);
@@ -216,7 +219,6 @@ public class MainProject {
                     }
 
                     Score.setText("Score: 0");
-
                     frame.remove(BG);
                     frame.add(BG);
                     frame.revalidate();
@@ -226,12 +228,12 @@ public class MainProject {
         });
 
         ControlPanel = new JPanel();
-        ControlPanel.setBounds(0, 600, 738, 107);
+        ControlPanel.setBounds(0, 600, 738, 100 + sliderHeight);
         ControlPanel.setBackground(Color.darkGray);
         frame.add(ControlPanel);
 
         LastLine = new JPanel();
-        LastLine.setBounds(0, 707, 738, 6);
+        LastLine.setBounds(0, 700 + sliderHeight, 738, 6);
         LastLine.setBackground(Color.red);
         frame.add(LastLine);
 
